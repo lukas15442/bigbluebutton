@@ -16,7 +16,7 @@ function getRandomInt(min, max) {
 }
 
 async function createMeeting(params, meetingId) {
-  const meetingID = meetingId || `random-${getRandomInt(1000000, 10000000).toString()}`;
+  const meetingID = meetingId;
   const mp = params.moderatorPW;
   const ap = params.attendeePW;
   const query = `name=${meetingID}&meetingID=${meetingID}&attendeePW=${ap}&moderatorPW=${mp}&joinViaHtml5=true`

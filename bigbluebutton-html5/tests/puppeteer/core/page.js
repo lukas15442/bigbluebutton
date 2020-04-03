@@ -31,6 +31,11 @@ class Page {
 
     const joinURL = helper.getJoinURL(this.meetingId, this.effectiveParams, isModerator);
 
+    if (process.env.URL_PRINTED !== '1') {
+      console.log(`URL ${joinURL}`);
+      process.env.URL_PRINTED = '1';
+    }
+
     await this.page.goto(joinURL);
     await this.waitForSelector(e.audioDialog);
     await this.click(e.closeAudio, true);
@@ -62,18 +67,18 @@ class Page {
 
   // Get the default arguments for creating a page
   static getArgs() {
-    return { headless: false, args: ['--no-sandbox', '--use-fake-ui-for-media-stream'] };
+    return { headless: (/true/i).test(process.env.START_HEADLESS), args: ['--no-sandbox', '--use-fake-ui-for-media-stream'] };
   }
 
   static getArgsWithVideo() {
     return {
-      headless: false,
+      headless: (/true/i).test(process.env.START_HEADLESS),
       args: [
         '--no-sandbox',
         '--use-fake-ui-for-media-stream',
         '--use-fake-device-for-media-stream',
         `--use-file-for-fake-video-capture=${process.env.VIDEO_FILE}`,
-        '--allow-file-access'
+        '--allow-file-access',
       ],
     };
   }
