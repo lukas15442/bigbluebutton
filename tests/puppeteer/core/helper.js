@@ -28,9 +28,9 @@ async function createMeeting(params, meetingId) {
   return meetingID;
 }
 
-function getJoinURL(meetingID, params, moderator) {
+function getJoinURL(meetingID, params, moderator, instanceName) {
   const pw = moderator ? params.moderatorPW : params.attendeePW;
-  const query = `fullName=${params.fullName}&joinViaHtml5=true&meetingID=${meetingID}&password=${pw}`;
+  const query = `fullName=${instanceName}&joinViaHtml5=true&meetingID=${meetingID}&password=${pw}`;
   const apicall = `join${query}${params.secret}`;
   const checksum = sha1(apicall);
   const url = `${params.server}/join?${query}&checksum=${checksum}`;

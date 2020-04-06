@@ -20,8 +20,9 @@ class Page {
   }
 
   // Join BigBlueButton meeting
-  async init(args, meetingId, newParams) {
-    this.effectiveParams = newParams || params;
+  async init(args, meetingId, newInstanceName) {
+    this.effectiveParams = params;
+    this.effectiveParams.fullName = newInstanceName;
     const isModerator = this.effectiveParams.moderatorPW;
     this.browser = await puppeteer.launch(args);
     this.page = await this.browser.newPage({ context: `bbb-${this.effectiveParams.fullName}` });
@@ -29,10 +30,16 @@ class Page {
     await this.setDownloadBehavior(`${this.parentDir}/downloads`);
     this.meetingId = await helper.createMeeting(params, meetingId);
 
-    const joinURL = helper.getJoinURL(this.meetingId, this.effectiveParams, isModerator);
+    const joinURL = helper.getJoinURL(
+      this.meetingId, this.effectiveParams, isModerator, newInstanceName,
+    );
 
     if (process.env.URL_PRINTED !== '1') {
-      console.log(`URL ${joinURL}`);
+      const instanceName = newInstanceName.split('_')[0];
+      const generalJoinURL = helper.getJoinURL(
+        this.meetingId, this.effectiveParams, isModerator, instanceName,
+      );
+      console.log(`URL ${generalJoinURL}`);
       process.env.URL_PRINTED = '1';
     }
 
